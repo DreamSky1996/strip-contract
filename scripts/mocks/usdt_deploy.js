@@ -9,21 +9,21 @@ async function main() {
     // Ethereum 0 address, used when toggling changes in treasury
     const zeroAddress = '0x0000000000000000000000000000000000000000';
 
-    // Initial mint for wAvax and MIM (10,000,000)
-    const initialMint = '10000000000000000000000000';
+    // Initial mint for USDT
+    const initialMint = '100000000000';
 
  
     // Deploy MIM
-    const MIM = await ethers.getContractFactory('AnyswapV5ERC20');
-    const mim = await MIM.deploy("Magic Internet Money", "MIM", 18, zeroAddress, deployer.address);
-    console.log("mim deployed on ", mim.address);
+    const USDT = await ethers.getContractFactory('AnyswapV5ERC20');
+    const usdt = await USDT.deploy("Tether USD", "USDT", 6, zeroAddress, deployer.address);
+    console.log("mim deployed on ", usdt.address);
 
     // Deploy 10,000,000 mock MIM and mock wAvax
-    await mim.initVault(deployer.address);
-    await mim.mint( deployer.address, initialMint );
-    console.log("mim minted ", initialMint);
+    await usdt.initVault(deployer.address);
+    await usdt.mint( deployer.address, initialMint );
+    console.log("USDT minted ", initialMint);
 
-    console.log( "MIM: " + mim.address );
+    console.log( "USDT: " + usdt.address );
 
   
 }
