@@ -5,9 +5,9 @@ async function main() {
     console.log('Deploying contracts with the account: ' + deployer.address);
 
     // Deploy MEMO
-    const MEMO = await ethers.getContractFactory('SStrip');
-    const memo = await MEMO.deploy();
-    console.log("sStrip deployed on ", memo.address);
+    const SStrip = await ethers.getContractFactory('SStrip');
+    const sStrip = await SStrip.deploy();
+    console.log("sStrip deployed on ", sStrip.address);
     // sStrip address : 
 }
 

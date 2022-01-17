@@ -49,7 +49,8 @@ module.exports = {
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       chainId: 4,
-      gasPrice: 30000000000,
+      gasPrice: 8000000000,
+      gas: 12450000,
       accounts: [privateKey]
     }
   }

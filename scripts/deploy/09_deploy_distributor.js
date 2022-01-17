@@ -4,11 +4,11 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const firstEpochBlock = "1638511200";
-    const epochLengthInBlocks = "28800";
+    const firstEpochBlock = "13819948";
+    const epochLengthInBlocks = "1920";
 
-    const stripAddress = "0x41bF588d7Eb46c36DB6fEF3eC446b477937017E9";
-    const treasuryAddress = "0x58863DfCDC511a93a4A544388E0557a74Fd16c0f";
+    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
+    const treasuryAddress = "0xdfddb8B260916cE081E1Ead4B8bDcD0451B1621B";
     // Deploy staking distributor
     const Distributor = await ethers.getContractFactory('Distributor');
     const distributor = await Distributor.deploy(treasuryAddress, stripAddress, epochLengthInBlocks, firstEpochBlock);

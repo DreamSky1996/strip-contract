@@ -16,7 +16,7 @@ async function main() {
     // Deploy MIM
     const USDT = await ethers.getContractFactory('AnyswapV5ERC20');
     const usdt = await USDT.deploy("Tether USD", "USDT", 6, zeroAddress, deployer.address);
-    console.log("mim deployed on ", usdt.address);
+    console.log("usdt deployed on ", usdt.address);
 
     // Deploy 10,000,000 mock MIM and mock wAvax
     await usdt.initVault(deployer.address);

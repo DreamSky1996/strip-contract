@@ -5,9 +5,9 @@ async function main() {
     console.log('Deploying contracts with the account: ' + deployer.address);
 
     // Deploy kandy
-    const Kandy = await ethers.getContractFactory('StripERC20Token');
-    const kandy = await Kandy.deploy();
-    console.log("Strip deployed on ", kandy.address);
+    const Strip = await ethers.getContractFactory('StripERC20Token');
+    const strip = await Strip.deploy();
+    console.log("Strip deployed on ", strip.address);
     // Strip address : 
 }
 

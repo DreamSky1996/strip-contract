@@ -4,7 +4,7 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const stripAddress = "0x41bF588d7Eb46c36DB6fEF3eC446b477937017E9";
+    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
     // Deploy bonding calc
     const BondingCalculator = await ethers.getContractFactory('StripBondingCalculator');
     const bondingCalculator = await BondingCalculator.deploy( stripAddress );

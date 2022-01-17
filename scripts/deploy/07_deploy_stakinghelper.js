@@ -4,8 +4,8 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const stakingAddress = "0xaCc58E44C73394c2FC12af9697bFD1D790ecA4B9";
-    const stripAddress = "0x41bF588d7Eb46c36DB6fEF3eC446b477937017E9";
+    const stakingAddress = "0x6286c3c2ad15720cB75Abc4cb44bF58956b0d14E";
+    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
     // Deploy staking helper
     const StakingHelper = await ethers.getContractFactory('StakingHelper');
     const stakingHelper = await StakingHelper.deploy(stakingAddress, stripAddress);
