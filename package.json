@@ -30,7 +30,7 @@
     "start:fuji": "npx hardhat run --network fuji scripts/deploy/deploy_mimbondset.js",
     "start:fujilp": "npx hardhat run --network fuji scripts/deploy_lp.js",
     "start:mainnet": "npx hardhat run --network mainnet scripts/deploy/11_deploy_avaxbond.js",
-    "start:rinkeby": "npx hardhat run --network rinkeby scripts/deploy/deploy_mimbondset.js",
+    "start:rinkeby": "npx hardhat run --network rinkeby scripts/deploy/deploy_init_set.js",
     "lint:sol": "solhint -f table contracts/**/*.sol"
   },
   "repository": {

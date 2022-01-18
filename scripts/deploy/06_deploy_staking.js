@@ -7,8 +7,8 @@ async function main() {
     const epochLengthInBlocks = "1920";
     const firstEpochNumber = "68";
     const firstEpochBlock = "13819948";
-    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
-    const sStripAddress = "0x90317383A3b491B025942e606D52EE73Da3C9572";
+    const stripAddress = "0x886a3898F07947B4A6c35eA4cd1FfA4619A2B8C9";
+    const sStripAddress = "0x640637d95c9c2DaE60AAa1cc76741616a5256FE2";
     // Deploy Staking
     const Staking = await ethers.getContractFactory('StripStaking');
     const staking = await Staking.deploy( stripAddress, sStripAddress, epochLengthInBlocks, firstEpochNumber, firstEpochBlock );

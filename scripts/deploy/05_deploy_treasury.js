@@ -4,11 +4,11 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
-    const usdtAddress = "0xaCc58E44C73394c2FC12af9697bFD1D790ecA4B9";
+    const stripAddress = "0x886a3898F07947B4A6c35eA4cd1FfA4619A2B8C9";
+    const mimAddress = "0xf1aAEB228FEDa61f546CB154F09dd758d32e573c";
     // Deploy treasury
     const Treasury = await ethers.getContractFactory('StripTreasury');
-    const treasury = await Treasury.deploy( stripAddress, usdtAddress, 0 );
+    const treasury = await Treasury.deploy( stripAddress, mimAddress, 0 );
     console.log("treasury deployed on", treasury.address);
     // treasury address : 
 }

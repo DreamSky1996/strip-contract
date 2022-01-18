@@ -4,9 +4,9 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const mimBondAddress = "0xA40C72Fd2B7d49588D65d86cbAA551c105C0Af96";
-    const stakingAddress = "0x6286c3c2ad15720cB75Abc4cb44bF58956b0d14E";
-    const stakingHelperAddress = "0x79EfC34B4eDec1175eAa68ac727615E5dB7336df";
+    const mimBondAddress = "0xeFc5eB216E05dA34d6a4cA90AcCD256c8b918E71";
+    const stakingAddress = "0xdC3849C73A484560fd5f87C85a24c3e1bd79dA85";
+    const stakingHelperAddress = "0x524B086f9722fD2e1960724D39fEac5E80Cb54EC";
 
     const mimBondBCV = "220";
     const minBondPrice = "15000";

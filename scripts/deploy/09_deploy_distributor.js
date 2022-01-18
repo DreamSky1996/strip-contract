@@ -7,8 +7,8 @@ async function main() {
     const firstEpochBlock = "13819948";
     const epochLengthInBlocks = "1920";
 
-    const stripAddress = "0x4d9b733Cc3d30f0fD64b3746d452e035aDbDF43f";
-    const treasuryAddress = "0xdfddb8B260916cE081E1Ead4B8bDcD0451B1621B";
+    const stripAddress = "0x886a3898F07947B4A6c35eA4cd1FfA4619A2B8C9";
+    const treasuryAddress = "0xAd33f21412Be9b98997f073DdCa8C3A45D718E39";
     // Deploy staking distributor
     const Distributor = await ethers.getContractFactory('Distributor');
     const distributor = await Distributor.deploy(treasuryAddress, stripAddress, epochLengthInBlocks, firstEpochBlock);
