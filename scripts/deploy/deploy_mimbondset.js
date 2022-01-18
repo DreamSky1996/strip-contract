@@ -4,17 +4,17 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log('Deploying contracts with the account: ' + deployer.address);
 
-    const mimBondAddress = "0x90317383A3b491B025942e606D52EE73Da3C9572";
-    const stakingAddress = "0xaCc58E44C73394c2FC12af9697bFD1D790ecA4B9";
-    const stakingHelperAddress = "0x94dd396818c3120b01e11D7f99954f2D7e4D9F8C";
+    const mimBondAddress = "0xA40C72Fd2B7d49588D65d86cbAA551c105C0Af96";
+    const stakingAddress = "0x6286c3c2ad15720cB75Abc4cb44bF58956b0d14E";
+    const stakingHelperAddress = "0x79EfC34B4eDec1175eAa68ac727615E5dB7336df";
 
     const mimBondBCV = "220";
-    const minBondPrice = "500";
+    const minBondPrice = "15000";
     const maxBondPayout = "75";
     const bondFee = "10000";
     const maxBondDebt = "2000000000000000";
     const intialBondDebt = "0";
-    const bondVestingLength = "432000";
+    const bondVestingLength = "28800";
 
     const MIMBond = await ethers.getContractFactory('StripBondDepository');
     const mimBond = await MIMBond.attach(mimBondAddress);
