@@ -1,5 +1,5 @@
-// @dev. This script will deploy this V1.1 of Kandyland. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
-// This should be enough of a test environment to learn about and test implementations with the Kandyland as of V1.1.
+// @dev. This script will deploy this V1.1 of Stripland. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
+// This should be enough of a test environment to learn about and test implementations with the Stripland as of V1.1.
 // Not that the every instance of the Treasury's function 'valueOf' has been changed to 'valueOfToken'... 
 // This solidity function was conflicting w js object property name
 
@@ -64,11 +64,11 @@ async function main() {
     const dao = await DAO.deploy([deployer.address], 1, 0);
     console.log("dao deployed on ", dao.address);
 
-    // Deploy KANDY
-    const KANDY = await ethers.getContractFactory('KandylandERC20Token');
-    const kandy = await KANDY.deploy();
+    // Deploy STRIP
+    const STRIP = await ethers.getContractFactory('StriplandERC20Token');
+    const strip = await STRIP.deploy();
 
-    console.log("KANDY deployed on ",kandy.address);
+    console.log("STRIP deployed on ",strip.address);
 
     // Deploy MIM
     const MIM = await ethers.getContractFactory('AnyswapV5ERC20');
@@ -91,49 +91,49 @@ async function main() {
 
     // Deploy treasury
     //@dev changed function in treaury from 'valueOf' to 'valueOfToken'... solidity function was coflicting w js object property name
-    const Treasury = await ethers.getContractFactory('KandyTreasury'); 
-    const treasury = await Treasury.deploy( kandy.address, mim.address, 0 );
+    const Treasury = await ethers.getContractFactory('StripTreasury'); 
+    const treasury = await Treasury.deploy( strip.address, mim.address, 0 );
     console.log("Treasury deployed on ", treasury.address);
     
 
     // Deploy bonding calc
-    const KandylandBondingCalculator = await ethers.getContractFactory('KandyBondingCalculator');
-    const kandylandBondingCalculator = await KandylandBondingCalculator.deploy( kandy.address );
-    console.log("KandylandBondingCalculator deployed on ",kandylandBondingCalculator.address);
+    const StriplandBondingCalculator = await ethers.getContractFactory('StripBondingCalculator');
+    const striplandBondingCalculator = await StriplandBondingCalculator.deploy( strip.address );
+    console.log("StriplandBondingCalculator deployed on ",striplandBondingCalculator.address);
     // Deploy staking distributor
     const Distributor = await ethers.getContractFactory('Distributor');
-    const distributor = await Distributor.deploy(treasury.address, kandy.address, epochLengthInBlocks, firstEpochBlock);
+    const distributor = await Distributor.deploy(treasury.address, strip.address, epochLengthInBlocks, firstEpochBlock);
     console.log("Distributor deployed on ",distributor.address);
-    // Deploy sKANDY
-    const SKANDY = await ethers.getContractFactory('sKandyland');
-    const sKANDY = await SKANDY.deploy();
-    console.log("SKANDY deployed on ",sKANDY.address);
+    // Deploy sSTRIP
+    const SSTRIP = await ethers.getContractFactory('sStripland');
+    const sSTRIP = await SSTRIP.deploy();
+    console.log("SSTRIP deployed on ",sSTRIP.address);
 
     // Deploy MEMO
-    const wsKANDY = await ethers.getContractFactory('wsKANDY');
-    const wskandy = await wsKANDY.deploy(sKANDY.address);
-    console.log("wsKANDY deployed on ", wskandy.address);
+    const wsSTRIP = await ethers.getContractFactory('wsSTRIP');
+    const wsstrip = await wsSTRIP.deploy(sSTRIP.address);
+    console.log("wsSTRIP deployed on ", wsstrip.address);
     
 
     // Deploy Staking
-    const Staking = await ethers.getContractFactory('KandyStaking');
-    const staking = await Staking.deploy( kandy.address, sKANDY.address, epochLengthInBlocks, firstEpochNumber, firstEpochBlock );
+    const Staking = await ethers.getContractFactory('StripStaking');
+    const staking = await Staking.deploy( strip.address, sSTRIP.address, epochLengthInBlocks, firstEpochNumber, firstEpochBlock );
     console.log("Staking deployed on ",staking.address);
 
     // Deploy staking warmpup
     const StakingWarmpup = await ethers.getContractFactory('StakingWarmup');
-    const stakingWarmup = await StakingWarmpup.deploy(staking.address, sKANDY.address);
+    const stakingWarmup = await StakingWarmpup.deploy(staking.address, sSTRIP.address);
     console.log("StakingWarmpup deployed on ",stakingWarmup.address);
 
     // Deploy staking helper
     const StakingHelper = await ethers.getContractFactory('StakingHelper');
-    const stakingHelper = await StakingHelper.deploy(staking.address, kandy.address);
+    const stakingHelper = await StakingHelper.deploy(staking.address, strip.address);
     console.log("StakingHelper deployed on ",stakingHelper.address);
 
     // Deploy MIM bond
     //@dev changed function call to Treasury of 'valueOf' to 'valueOfToken' in BondDepository due to change in Treausry contract
-    const MIMBond = await ethers.getContractFactory('KandyBondDepository');
-    const mimBond = await MIMBond.deploy(kandy.address, mim.address, treasury.address, dao.address, zeroAddress);
+    const MIMBond = await ethers.getContractFactory('StripBondDepository');
+    const mimBond = await MIMBond.deploy(strip.address, mim.address, treasury.address, dao.address, zeroAddress);
     console.log("MIMBond deployed on ",mimBond.address);
 
 
@@ -150,18 +150,18 @@ async function main() {
     await mimBond.setStaking(staking.address, 0);
     console.log("mimBond setStaking");
 
-    // Initialize sKANDY and set the index
-    await sKANDY.initialize(staking.address);
-    console.log("sKANDY.initialize");
-    await sKANDY.setIndex(initialIndex);
-    console.log("sKANDY.setIndex");
+    // Initialize sSTRIP and set the index
+    await sSTRIP.initialize(staking.address);
+    console.log("sSTRIP.initialize");
+    await sSTRIP.setIndex(initialIndex);
+    console.log("sSTRIP.setIndex");
 
     // set distributor contract and warmup contract
     await staking.setContract('0', distributor.address);
     await staking.setContract('1', stakingWarmup.address);
 
-    // Set treasury for KANDY token
-    await kandy.setVault(treasury.address);
+    // Set treasury for STRIP token
+    await strip.setVault(treasury.address);
 
     // Add staking contract as distributor recipient
     await distributor.addRecipient(staking.address, initialRewardRate);
@@ -188,28 +188,28 @@ async function main() {
     await mim.approve(mimBond.address, largeApproval );
 
     console.log("mim.approve")
-    // Approve staking and staking helper contact to spend deployer's KANDY
-    await kandy.approve(staking.address, largeApproval);
-    await kandy.approve(stakingHelper.address, largeApproval);
+    // Approve staking and staking helper contact to spend deployer's STRIP
+    await strip.approve(staking.address, largeApproval);
+    await strip.approve(stakingHelper.address, largeApproval);
 
-    // Deposit 9,000,000 MIM to treasury, 600,000 KANDY gets minted to deployer and 8,400,000 are in treasury as excesss reserves
+    // Deposit 9,000,000 MIM to treasury, 600,000 STRIP gets minted to deployer and 8,400,000 are in treasury as excesss reserves
     await treasury.deposit('9000000000000000000000000', mim.address, '8400000000000000');
     console.log("treasury.deposit")
 
-    // Stake KANDY through helper
+    // Stake STRIP through helper
     await stakingHelper.stake('100000000000', deployer.address);
     console.log("stakingHelper.stake")
-    // Bond 1,000 KANDY and Frax in each of their bonds
+    // Bond 1,000 STRIP and Frax in each of their bonds
     await mimBond.deposit('1000000000000000000000', '60000', deployer.address );
     console.log("mimBond.deposit")
 
-    console.log( "KANDY: " + kandy.address );
+    console.log( "STRIP: " + strip.address );
     console.log( "MIM: " + mim.address );
     console.log( "Treasury: " + treasury.address );
-    console.log( "Calc: " + kandylandBondingCalculator.address );
+    console.log( "Calc: " + striplandBondingCalculator.address );
     console.log( "Staking: " + staking.address );
-    console.log( "sKANDY: " + sKANDY.address );
-    console.log( "wsKANDY: " + wsKANDY.address );
+    console.log( "sSTRIP: " + sSTRIP.address );
+    console.log( "wsSTRIP: " + wsSTRIP.address );
     console.log( "Distributor " + distributor.address);
     console.log( "Staking Wawrmup " + stakingWarmup.address);
     console.log( "Staking Helper " + stakingHelper.address);

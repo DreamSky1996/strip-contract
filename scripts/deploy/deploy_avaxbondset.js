@@ -19,7 +19,7 @@ async function main() {
     const bondVestingLength = "432000";
 
     console.log("start");
-    const AvaxBond = await ethers.getContractFactory('KandyEthBondDepository');
+    const AvaxBond = await ethers.getContractFactory('StripEthBondDepository');
     const avaxBond = await AvaxBond.attach(avaxBondAddress);
     console.log("start set");
     // Set AVAX bond terms
@@ -31,7 +31,7 @@ async function main() {
     await avaxBond.setStaking(stakingHelperAddress, 1);
     console.log("Set AVAX bond staking");
 
-    const Treasury = await ethers.getContractFactory('KandyTreasury');
+    const Treasury = await ethers.getContractFactory('StripTreasury');
     const treasury = await Treasury.attach(treasuryAddress);
 
     await treasury.queue('2', wavaxAddress);

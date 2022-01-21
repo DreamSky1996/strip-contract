@@ -1,5 +1,5 @@
-// @dev. This script will deploy this V1.1 of KandyLand. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
-// This should be enough of a test environment to learn about and test implementations with the kandyland as of V1.1.
+// @dev. This script will deploy this V1.1 of StripLand. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
+// This should be enough of a test environment to learn about and test implementations with the stripland as of V1.1.
 // Not that the every instance of the Treasury's function 'valueOf' has been changed to 'valueOfToken'... 
 // This solidity function was conflicting w js object property name
 
@@ -71,10 +71,10 @@ async function main() {
     const dao = await DAO.deploy([deployer.address], 1, 0);
     console.log("dao deployed on ", dao.address);
 
-    // Deploy kandy *
-    const Kandy = await ethers.getContractFactory('KandyERC20Token');
-    const kandy = await Kandy.deploy();
-    console.log("kandy deployed on ", kandy.address);
+    // Deploy strip *
+    const Strip = await ethers.getContractFactory('StripERC20Token');
+    const strip = await Strip.deploy();
+    console.log("strip deployed on ", strip.address);
 
     // Deploy MIM
     const MIM = await ethers.getContractFactory('AnyswapV5ERC20');
@@ -89,18 +89,18 @@ async function main() {
 
     // Deploy treasury *
     //@dev changed function in treaury from 'valueOf' to 'valueOfToken'... solidity function was conflicting w js object property name
-    const Treasury = await ethers.getContractFactory('KandyTreasury');
-    const treasury = await Treasury.deploy( kandy.address, mim.address, 0 );
+    const Treasury = await ethers.getContractFactory('StripTreasury');
+    const treasury = await Treasury.deploy( strip.address, mim.address, 0 );
     console.log("treasury deployed on", treasury.address);
 
     // Deploy bonding calc *
-    const BondingCalculator = await ethers.getContractFactory('KandyBondingCalculator');
-    const bondingCalculator = await BondingCalculator.deploy( kandy.address );
+    const BondingCalculator = await ethers.getContractFactory('StripBondingCalculator');
+    const bondingCalculator = await BondingCalculator.deploy( strip.address );
     console.log("BondingCalculator deployed on ", bondingCalculator.address);
 
     // Deploy staking distributor *
     const Distributor = await ethers.getContractFactory('Distributor');
-    const distributor = await Distributor.deploy(treasury.address, kandy.address, epochLengthInBlocks, firstEpochBlock);
+    const distributor = await Distributor.deploy(treasury.address, strip.address, epochLengthInBlocks, firstEpochBlock);
     console.log("distributor deployed on ", distributor.address);
 
     // Deploy MEMO *
@@ -114,9 +114,9 @@ async function main() {
     console.log("wmemo deployed on ", wmemo.address);
 
     // Deploy Staking *
-    const Staking = await ethers.getContractFactory('KandyStaking');
-    const staking = await Staking.deploy( kandy.address, memo.address, epochLengthInBlocks, firstEpochNumber, firstEpochBlock );
-    console.log("KandyStaking deployed on ", staking.address);
+    const Staking = await ethers.getContractFactory('StripStaking');
+    const staking = await Staking.deploy( strip.address, memo.address, epochLengthInBlocks, firstEpochNumber, firstEpochBlock );
+    console.log("StripStaking deployed on ", staking.address);
 
     // Deploy staking warmpup *
     const StakingWarmpup = await ethers.getContractFactory('StakingWarmup');
@@ -125,21 +125,21 @@ async function main() {
 
     // Deploy staking helper
     const StakingHelper = await ethers.getContractFactory('StakingHelper');
-    const stakingHelper = await StakingHelper.deploy(staking.address, kandy.address);
+    const stakingHelper = await StakingHelper.deploy(staking.address, strip.address);
     console.log("stakingHelper deployed on ", stakingHelper.address);
 
     // Deploy MIM bond
     //@dev changed function call to Treasury of 'valueOf' to 'valueOfToken' in BondDepository due to change in Treasury contract
-    const MIMBond = await ethers.getContractFactory('KandyBondDepository');
-    const mimBond = await MIMBond.deploy(kandy.address, mim.address, treasury.address, dao.address, zeroAddress);
+    const MIMBond = await ethers.getContractFactory('StripBondDepository');
+    const mimBond = await MIMBond.deploy(strip.address, mim.address, treasury.address, dao.address, zeroAddress);
     console.log("mimBond deployed on ", mimBond.address);
 
   
 
     // Deploy AVAX bond
     //@dev changed function call to Treasury of 'valueOf' to 'valueOfToken' in BondDepository due to change in Treasury contract
-    const AvaxBond = await ethers.getContractFactory('KandyEthBondDepository');
-    const avaxBond = await AvaxBond.deploy(kandy.address, avaxAddress, treasury.address, dao.address, avaxUsdPriceFeedAddress);
+    const AvaxBond = await ethers.getContractFactory('StripEthBondDepository');
+    const avaxBond = await AvaxBond.deploy(strip.address, avaxAddress, treasury.address, dao.address, avaxUsdPriceFeedAddress);
     console.log("avaxBond deployed on ", avaxBond.address);
 
  
@@ -174,9 +174,9 @@ async function main() {
     await staking.setContract('1', stakingWarmup.address);
     console.log("set distributor contract and warmup contract");
 
-    // Set treasury for Kandy token
-    await kandy.setVault(treasury.address);
-    console.log("Set treasury for Kandy token");
+    // Set treasury for Strip token
+    await strip.setVault(treasury.address);
+    console.log("Set treasury for Strip token");
 
     // Add staking contract as distributor recipient
     await distributor.addRecipient(staking.address, initialRewardRate);
@@ -207,33 +207,33 @@ async function main() {
     // Approve mim and wavax bonds to spend deployer's MIM and wAvax
     await mim.approve(mimBond.address, largeApproval );
     // await wavax.approve(avaxBond.address, largeApproval );
-    // await wavax.approve(kandyAvaxBond.address, largeApproval );
+    // await wavax.approve(stripAvaxBond.address, largeApproval );
     console.log("Approved mim and wavax bonds to spend deployer's MIM and wAvax");
 
-    // Approve staking and staking helper contact to spend deployer's Kandy
-    await kandy.approve(staking.address, largeApproval);
-    await kandy.approve(stakingHelper.address, largeApproval);
-    console.log("kandy approved stakingHelper");
+    // Approve staking and staking helper contact to spend deployer's Strip
+    await strip.approve(staking.address, largeApproval);
+    await strip.approve(stakingHelper.address, largeApproval);
+    console.log("strip approved stakingHelper");
 
-    // Deposit 9,000,000 MIM to treasury, 600,000 kandy gets minted to deployer and 8,400,000 are in treasury as excesss reserves
+    // Deposit 9,000,000 MIM to treasury, 600,000 strip gets minted to deployer and 8,400,000 are in treasury as excesss reserves
     await treasury.deposit('9000000000000000000000000', mim.address, '8400000000000000');
     console.log("treasury deposited mim");
 
-    // Stake kandy through helper
+    // Stake strip through helper
     await stakingHelper.stake('100000000000', deployer.address);
-    console.log("Staked kandy through helper");
+    console.log("Staked strip through helper");
 
-    // Bond 1,000 kandy and wAvax in each of their bonds
+    // Bond 1,000 strip and wAvax in each of their bonds
     await mimBond.deposit('1000000000000000000000', '60000', deployer.address );
     console.log("mimBond deposited");
     // await avaxBond.deposit('1000000000000000000000', '60000', deployer.address );
     // console.log("wavaxBond deposited");
-    // await kandyMIMBond.deposit('1000000000000000000000', '60000', deployer.address );
-    // console.log("kandyMIMBond deposited");
-    // await kandyAvaxBond.deposit('1000000000000000000000', '60000', deployer.address );
-    // console.log("kandyMIMBond deposited");
+    // await stripMIMBond.deposit('1000000000000000000000', '60000', deployer.address );
+    // console.log("stripMIMBond deposited");
+    // await stripAvaxBond.deposit('1000000000000000000000', '60000', deployer.address );
+    // console.log("stripMIMBond deposited");
 
-    console.log( "Kandy: " + kandy.address );
+    console.log( "Strip: " + strip.address );
     console.log( "MIM: " + mim.address );
     console.log( "wAvax: " + avaxAddress );
     console.log( "MEMO: " + memo.address );

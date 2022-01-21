@@ -1,5 +1,5 @@
-// @dev. This script will deploy this V1.1 of KandyLand. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
-// This should be enough of a test environment to learn about and test implementations with the kandyland as of V1.1.
+// @dev. This script will deploy this V1.1 of Strip. It will deploy the whole ecosystem except for the LP tokens and their bonds. 
+// This should be enough of a test environment to learn about and test implementations with the Strip as of V1.1.
 // Not that the every instance of the Treasury's function 'valueOf' has been changed to 'valueOfToken'... 
 // This solidity function was conflicting w js object property name
 
@@ -61,18 +61,18 @@ async function main() {
     // AVAX/USD price feed address
     const avaxUsdPriceFeedAddress = '0x5498BB86BC934c8D34FDA08E81D444153d0D06aD';
 
-    // Kandy-MIM lp token address
-    const KandyMimLpTokenAddress = '0xD58AFc1c62C99BE0D79ec9D587b62cA49d5Dd68e'; // mim-kandy
+    // Strip-MIM lp token address
+    const StripMimLpTokenAddress = '0xD58AFc1c62C99BE0D79ec9D587b62cA49d5Dd68e'; // mim-Strip
 
-    // kandy-AVAX lp token address
-    const KandyAvaxLpTokenAddress = '0xf0b7eAb44fab7e4afB7110d8475B7725EfF57F48'; // avax-kandy
+    // Strip-AVAX lp token address
+    const StripAvaxLpTokenAddress = '0xf0b7eAb44fab7e4afB7110d8475B7725EfF57F48'; // avax-Strip
 
     // Avax address
     const avaxAddress = '0xd00ae08403b9bbb9124bb305c09058e32c39a48c';
 
     const daoAddress = '0x50d1D6398A3037E5B98Fa3efF6bDa1131143408a';
 
-    const kandyAddress = '0x4010DdbfA72724f5c697908296a75301a0e8710e';
+    const StripAddress = '0x4010DdbfA72724f5c697908296a75301a0e8710e';
 
     const mimAddress = '0x7929959Aaa69F313856b2327a2cFAAB5728D8AF3';
 
@@ -96,50 +96,50 @@ async function main() {
 
     const avaxBond = '0xdB4d4828BE38822F2a7cF8e0f18c585Eca09bAE8';
 
-    // Deploy kandy-MIM bond
+    // Deploy Strip-MIM bond
     //@dev changed function call to Treasury of 'valueOf' to 'valueOfToken' in BondDepository due to change in Treasury contract
-    const KandyMIMBond = await ethers.getContractFactory('KandyBondDepository');
-    const kandyMIMBond = await KandyMIMBond.deploy(kandyAddress, KandyMimLpTokenAddress, treasuryAddress, daoAddress, bondingCalculatorAddress);
-    console.log("KandyMIMBond deployed on ", kandyMIMBond.address);
+    const StripMIMBond = await ethers.getContractFactory('StripBondDepository');
+    const stripMIMBond = await StripMIMBond.deploy(StripAddress, StripMimLpTokenAddress, treasuryAddress, daoAddress, bondingCalculatorAddress);
+    console.log("StripMIMBond deployed on ", stripMIMBond.address);
 
     
 
-    // Deploy Kandy-AVAX bond
+    // Deploy Strip-AVAX bond
     //@dev changed function call to Treasury of 'valueOf' to 'valueOfToken' in BondDepository due to change in Treasury contract
-    const KandyAvaxBond = await ethers.getContractFactory('KandyBondDepository');
-    const kandyAvaxBond = await KandyAvaxBond.deploy(kandyAddress, KandyAvaxLpTokenAddress, treasuryAddress, daoAddress, bondingCalculatorAddress);
-    console.log("KandyAvaxBond deployed on ", kandyAvaxBond.address);
+    const StripAvaxBond = await ethers.getContractFactory('StripBondDepository');
+    const stripAvaxBond = await StripAvaxBond.deploy(stripAddress, StripAvaxLpTokenAddress, treasuryAddress, daoAddress, bondingCalculatorAddress);
+    console.log("StripAvaxBond deployed on ", stripAvaxBond.address);
 
     // queue and toggle MIM and wAvax bond reserve depositor
-    const Treasury = await ethers.getContractFactory('KandyTreasury');
+    const Treasury = await ethers.getContractFactory('StripTreasury');
     const treasury = await Treasury.attach(treasuryAddress);
-    await treasury.queue('4', kandyMIMBond.address);
-    await treasury.queue('4', kandyAvaxBond.address);
-    await treasury.toggle('4', kandyMIMBond.address, zeroAddress);
-    await treasury.toggle('4', kandyAvaxBond.address, zeroAddress);
+    await treasury.queue('4', stripMIMBond.address);
+    await treasury.queue('4', stripAvaxBond.address);
+    await treasury.toggle('4', stripMIMBond.address, zeroAddress);
+    await treasury.toggle('4', stripAvaxBond.address, zeroAddress);
     console.log("queue and toggle MIM and wAvax bond reserve depositor");
 
     // Set MIM and wAvax bond terms
-    await kandyMIMBond.initializeBondTerms(mimBondBCV, minBondPrice, maxBondPayout, bondFee, maxBondDebt, intialBondDebt, bondVestingLength);
-    console.log("Set Kandy-MIM bond terms");
-    await kandyAvaxBond.initializeBondTerms(wavaxBondBCV, minBondPrice, maxBondPayout, bondFee, maxBondDebt, intialBondDebt, bondVestingLength);
-    console.log("Set Kandy-WAVAX bond terms");
+    await stripMIMBond.initializeBondTerms(mimBondBCV, minBondPrice, maxBondPayout, bondFee, maxBondDebt, intialBondDebt, bondVestingLength);
+    console.log("Set Strip-MIM bond terms");
+    await stripAvaxBond.initializeBondTerms(wavaxBondBCV, minBondPrice, maxBondPayout, bondFee, maxBondDebt, intialBondDebt, bondVestingLength);
+    console.log("Set Strip-WAVAX bond terms");
 
     // Set staking for MIM and wAvax bond
-    await kandyMIMBond.setStaking(stakingAddress, 0);
-    await kandyMIMBond.setStaking(stakingHelperAddress, 1);
-    await kandyAvaxBond.setStaking(stakingAddress, 0);
-    await kandyAvaxBond.setStaking(stakingHelperAddress, 1);
+    await stripMIMBond.setStaking(stakingAddress, 0);
+    await stripMIMBond.setStaking(stakingHelperAddress, 1);
+    await stripAvaxBond.setStaking(stakingAddress, 0);
+    await stripAvaxBond.setStaking(stakingHelperAddress, 1);
     console.log("Set staking for MIM and wAvax bond");
 
     // Approve mim and wavax bonds to spend deployer's MIM and wAvax
     const MIM = await ethers.getContractFactory('AnyswapV5ERC20');
     const mim = MIM.attach(mimAddress);
-    await mim.approve(kandyMIMBond.address, largeApproval );
+    await mim.approve(stripMIMBond.address, largeApproval );
 
     console.log("Approved mim and wavax bonds to spend deployer's MIM and wAvax");
-    console.log( "KandyMim Bond: ", kandyMIMBond.address );
-    console.log( "KandyAvax Bond: ", kandyAvaxBond.address );
+    console.log( "StripMim Bond: ", stripMIMBond.address );
+    console.log( "StripAvax Bond: ", stripAvaxBond.address );
 }
 
 main()
